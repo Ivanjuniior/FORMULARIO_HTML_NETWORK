@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css" />
+  <title>Gerador de CGNAT- RouterOS :: By Ivan Junior</title>
+</head>
+
+<body>
+  <div class="main-cgn">
+    <div class="left-cgn">
+      <h1>Gerador de Script<br/>CGN RouterOS <i class="fa-solid fa-scroll"></i></h1>
+      <img src="img/script.svg" class="left-cgn-image" alt="datacenter" />
+    </div>
+
+    <div class="right-cgn">
+      <div class="card-cgn">
+        <h1>PARÂMETROS <i class="fa-regular fa-square-check"></i></h1><br>
+        <div class="textfield">
+          <div class="textfield-col">
+            <label for="Prefixo Privado">Prefixo Privado</label> <i class="fa-solid fa-network-wired"></i>
+            <input type="text" name="PREFIX_CGNAT" id="PREFIX_CGNAT" placeholder="Ex. 100.64.0.0" value="100.64.0.0"
+              required />
+          </div>
+          <div class="textfield-col">
+            <label for="Prefixo Publico">Prefixo Publico</label> <i class="fa-solid fa-network-wired"></i>
+            <input type="text" name="PREFIX_PUB" id="PREFIX_PUB" placeholder="Ex. 200.2.0.0/24" required />
+          </div>
+        </div>
+        <div class="textfield">
+          <div class="textfield-col">
+            <label for="1paraN">1 Público N Privados?</label> <i class="fa-solid fa-earth-americas"></i>
+            <select id="CLIENTE_POR_IP">
+              <option selected disabled value="">Selecione</option>
+              <option value="2">2 (+/- 32000 portas)</option>
+              <option value="4">4 (+/- 16000 portas)</option>
+              <option value="8">8 (+/- 8000 portas)</option>
+              <option value="16">16 (+/- 4000 portas)</option>
+              <option value="32">32 (+/- 2000 portas)</option>
+              <option value="64">64 (+/- 1000 portas)</option>
+              <option value="128">128 (+/- 500 portas)</option>
+            </select>
+          </div>
+          <div class="textfield-col">
+            <label for="SEQUENCIAL_JUMP">Sequencia da Chain</label> <i class="fa-solid fa-code-pull-request"></i>
+            <input type="number" name="SEQUENCIAL_JUMP" id="SEQUENCIAL_JUMP" placeholder="0" value="0" />
+          </div>
+        </div>
+        <div class="textfield">
+          <div class="textfield-col">
+            <label for="int">Interface de Uplink</label> <i class="fa-solid fa-ethernet"></i>
+
+            <select class="form-select" name="INTERFACE_UPLINK" id="INTERFACE_UPLINK" onChange="dis_able4()">
+              <option selected disabled value="">Selecione</option>
+              <option value="n">Não informar</option>
+              <option value="s">Nome da Interface (Recomendado)</option>
+              <option value="l">Nome da Interface List</option>
+            </select>
+          </div>
+          <div class="textfield-col">
+            <label for="INTERFACE_UPLINK_NOME">Nome da interface</label> <i class="fa-solid fa-ethernet"></i>
+            <input type="text" class="textfield" id="INTERFACE_UPLINK_NOME" name="INTERFACE_UPLINK_NOME"
+              placeholder="sfp-sfpplus1.1000" value="" readonly />
+          </div>
+        </div>
+        <div class="textfield">
+          <div class="textfield-col">
+            <label for="notrack">No Track</label> <i class="fa-solid fa-gauge-high"></i>
+            <select id="notrack" onchange="doHabilita('notrack')">
+              <option selected disabled value="">Selecione</option>
+              <option value="s">Sim</option>
+              <option value="n">Não</option>
+            </select>
+          </div>
+          <div class="textfield-col">
+            <label for="fasttrack">Fast Track</label> <i class="fa-solid fa-gauge-high"></i>
+            <select id="fasttrack" onchange="doHabilita('notrack')">
+              <option selected disabled value="">Selecione</option>
+              <option value="s">Sim</option>
+              <option value="n">Não</option>
+            </select>
+          </div>
+        </div>
+        <div class="textfield">
+          <div class="textfield-col">
+            <label for="blackhole">Blackhole</label> <i class="fa-solid fa-network-wired"></i>
+            <select id="blackhole" onchange="doHabilita('notrack')">
+              <option selected disabled value="">Selecione</option>
+              <option value="s">Sim</option>
+              <option value="n">Não</option>
+            </select>
+          </div>
+          <div class="textfield-col">
+            <label for="BLOCK_PORTAS">Bloquear portas baixas?</label> <i class="fa-solid fa-ban"></i>
+            <select id="BLOCK_PORTAS" onchange="doPortasBaixas()">
+              <option selected disabled value="">Selecione</option>
+              <option value="s">Sim</option>
+              <option value="n">Não</option>
+            </select>
+          </div>
+        </div>
+        <div class="textfield">
+          <div class="radio-wrapper">
+            <label for="protocolos">Protocolos <i class="fa-solid fa-border-all"></i></label> 
+            <label>
+              <input type="radio" id="TCP_UDP" name="TCP_UDP" value="TCP_UDP" checked />TCP/UDP
+              <input type="radio" id="TCP" name="TCP_UDP" value="TCP" />TCP
+            </label>
+          </div>
+        </div>
+        <div class="textfield">
+          <div class="radio-wrapper">
+            <label for="routeros">RouterOS <i class="fa-solid fa-microchip"></i></label> 
+            <label>
+              <input type="radio" id="v6" name="versao" value="6" checked />Versão-6.x
+              <input type="radio" id="v7" name="versao" value="7" />Versão-7.x
+            </label>
+          </div>
+        </div>
+        <!-- Botão para enviar o formulário -->
+        <button class="btn-login" type="submit" onclick="gerarScript()">
+          GERAR SCRIPT <i class="fa-solid fa-spinner"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="js/scripts.js"></script>
+<script src="https://kit.fontawesome.com/c32114789a.js" crossorigin="anonymous"></script>
+</html>
